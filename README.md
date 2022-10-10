@@ -18,6 +18,9 @@ Inside, add PGDATABASE=nc_games
 
 This will create the main development database.
 
+These files will both need to be added to a .gitignore file in order to prevent them being committed to github.
+To ignore both you can add .env.* in the .gitignore file. This will ignore all .env files.
+
 **Please ensure you work through the tickets in numerical order.**
 
 ## Git Branching and Pull Requests
