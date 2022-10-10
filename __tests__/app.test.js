@@ -1,10 +1,10 @@
 const seed = require('../db/seeds/seed');
-const { categoryData, commentData, reviewData, userData } = require('../db/data/test-data');
+const testData = require('../db/data/test-data');
 const db = require('../db/connection');
 const app = require('../app.js');
 const request = require('supertest');
 
-beforeEach(() => seed({categoryData, commentData, reviewData, userData}));
+beforeEach(() => seed(testData));
 afterAll(() => db.end());
 
 describe('app', () => {
