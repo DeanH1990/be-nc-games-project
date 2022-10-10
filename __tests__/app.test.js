@@ -58,8 +58,16 @@ describe('app', () => {
                                 votes: 100,
                                 category: 'social deduction',
                                 owner: 'mallionaire',
-                                created_at: new Date(1611311824839)
+                                created_at: "2021-01-22T10:37:04.839Z"
                             })
+                        })
+                    })
+                    test('status 400: responds with error passed an id of an incorrect type', () => {
+                        return request(app)
+                        .get('/api/reviews/not-a-number')
+                        .expect(400)
+                        .then(({ body }) => {
+                            expect(body.msg).toBe('Invalid ID type')
                         })
                     })
                 })
