@@ -70,6 +70,15 @@ describe('app', () => {
                             expect(body.msg).toBe('Invalid ID type')
                         })
                     })
+                    test('status 404: responds with error when passed valud id type that is not present', () => {
+                        return request(app)
+                        .get('/api/reviews/50000')
+                        .expect(404)
+                        .then(({ body }) => {
+                            console.log(body)
+                            expect(body.msg).toBe('Review ID not found')
+                        })
+                    })
                 })
             })
         })
