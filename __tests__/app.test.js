@@ -41,5 +41,29 @@ describe('app', () => {
                 })
             })
         })
+        describe('/reviews', () => {
+            describe('/:review_id', () => {
+                describe('GET: /api/reviews/:review_id', () => {
+                    test('status 200: responds with correct review from review id', () => {
+                        return request(app)
+                        .get('/api/reviews/12')
+                        .expect(200)
+                        .then(({ body }) => {
+                            expect(body.review).toEqual({
+                                review_id: 12,
+                                title: `Scythe; you're gonna need a bigger table!`,
+                                review_body: 'Spend 30 minutes just setting up all of the boards (!) meeple and decks, just to forget how to play. Scythe can be a lengthy game but really packs a punch if you put the time in. With beautiful artwork, countless scenarios and clever game mechanics, this board game is a must for any board game fanatic; just make sure you explain ALL the rules before you start playing with first timers or you may find they bring it up again and again.',
+                                designer: 'Jamey Stegmaier',
+                                review_img_url: 'https://images.pexels.com/photos/163064/play-stone-network-networked-interactive-163064.jpeg',
+                                votes: 100,
+                                category: 'social deduction',
+                                owner: 'mallionaire',
+                                created_at: new Date(1611311824839)
+                            })
+                        })
+                    })
+                })
+            })
+        })
     })
 })
