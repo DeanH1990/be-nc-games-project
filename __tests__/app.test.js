@@ -8,6 +8,16 @@ beforeEach(() => seed({categoryData, commentData, reviewData, userData}));
 afterAll(() => db.end());
 
 describe('app', () => {
+    describe('/not-a-route', () => {
+        test('status 404: route not found', () => {
+            return request(app)
+            .get('/api/anything')
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe('Route not found')
+            })
+        })
+    })
     describe('/api', () => {
         describe('/categories', () => {
             describe('GET: /api/categories', () => {
