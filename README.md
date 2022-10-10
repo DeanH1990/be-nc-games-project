@@ -1,16 +1,22 @@
 # Northcoders House of Games API
 
-## Background
+## Welcome to my game API
 
-We will be building an API for the purpose of accessing application data programmatically. The intention here is to mimic the building of a real world backend service (such as reddit) which should provide this information to the front end architecture.
+### How to use this repo
 
-Your database will be PSQL, and you will interact with it using [node-postgres](https://node-postgres.com/).
+In order to clone and run the files you will need to create two .env files. These files will allow the creation of the test and development data.
 
-## Kanban
+1. Create a .env.test file.
 
-### Link to your Trello Board here: https://trello.com/b/gBtX4GN3/be-nc-games
+Inside this add PGDATABASE=nc_games_test
 
-To keep track of the tasks involved in this project we're going to use a kanban board. Ensure that you work on one _ticket_ at time. You can click on the ticket to find out more information about what is required for the feature. A ticket is not considered complete unless both the happy path and errors response are handled. You can make use of the checklist on each ticket to keep track of the errors you want to handle. You can also make use of [error-handling.md](error-handling.md) to consider the error codes we may wish to respond with.
+This will create the test database.
+
+2. Create a .env.development file.
+
+Inside, add PGDATABASE=nc_games
+
+This will create the main development database.
 
 **Please ensure you work through the tickets in numerical order.**
 
