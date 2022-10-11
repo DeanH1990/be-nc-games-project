@@ -44,7 +44,7 @@ describe('app', () => {
         describe('/reviews', () => {
             describe('/:review_id', () => {
                 describe('GET: /api/reviews/:review_id', () => {
-                    test.only('status 200: responds with correct review from review id', () => {
+                    test('status 200: responds with correct review from review id', () => {
                         return request(app)
                         .get('/api/reviews/12')
                         .expect(200)
@@ -78,6 +78,29 @@ describe('app', () => {
                         .then(({ body }) => {
                             console.log(body)
                             expect(body.msg).toBe('Review ID not found')
+                        })
+                    })
+                })
+            })
+        })
+        describe('/users', () => {
+            describe('GET: /api/users', () => {
+                test('status 200: responds with an array of users', () => {
+                    return request(app)
+                    .get('/api/users')
+                    .expect(200)
+                    .then(({ body }) => {
+                        const { users } = body;
+                        expect(users).toBeInstanceOf(Array);
+                        expect(users).toHaveLength(4);
+                        users.forEach(user => {
+                            expect(user).toEqual(
+                                expect.objectContaining({
+                                    username: expect.any(String),
+                                    name: expect.any(String),
+                                    avatar_url: expect.any(String)
+                                })
+                            )
                         })
                     })
                 })
