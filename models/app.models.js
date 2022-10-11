@@ -15,7 +15,6 @@ exports.selectReviewById = (review_id) => {
     WHERE reviews.review_id = $1
     GROUP BY reviews.review_id;`, [review_id])
     .then(({ rows: [review] }) => {
-        console.log(review)
         if (review === undefined) {
             return Promise.reject({ status: 404, msg: 'Review ID not found'})
         }

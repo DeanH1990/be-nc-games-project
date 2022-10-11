@@ -50,7 +50,6 @@ describe('app', () => {
                         .expect(200)
                         .then(({ body }) => {
                             const { review } = body;
-                            console.log(review)
                             expect(review).toEqual({
                                 review_id: 12,
                                 title: `Scythe; you're gonna need a bigger table!`,
