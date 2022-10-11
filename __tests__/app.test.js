@@ -44,12 +44,13 @@ describe('app', () => {
         describe('/reviews', () => {
             describe('/:review_id', () => {
                 describe('GET: /api/reviews/:review_id', () => {
-                    test('status 200: responds with correct review from review id', () => {
+                    test.only('status 200: responds with correct review from review id', () => {
                         return request(app)
                         .get('/api/reviews/12')
                         .expect(200)
                         .then(({ body }) => {
                             const { review } = body;
+                            console.log(review)
                             expect(review).toEqual({
                                 review_id: 12,
                                 title: `Scythe; you're gonna need a bigger table!`,
@@ -59,7 +60,8 @@ describe('app', () => {
                                 votes: 100,
                                 category: 'social deduction',
                                 owner: 'mallionaire',
-                                created_at: "2021-01-22T10:37:04.839Z"
+                                created_at: "2021-01-22T10:37:04.839Z",
+                                comment_count: 0
                             })
                         })
                     })
