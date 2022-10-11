@@ -63,7 +63,7 @@ describe('app', () => {
                             })
                         })
                     })
-                    test('status 400: responds with error passed an id of an incorrect type', () => {
+                    test('status 400: responds with error if passed an id of an incorrect type', () => {
                         return request(app)
                         .get('/api/reviews/not-a-number')
                         .expect(400)
@@ -76,8 +76,40 @@ describe('app', () => {
                         .get('/api/reviews/50000')
                         .expect(404)
                         .then(({ body }) => {
-                            console.log(body)
                             expect(body.msg).toBe('Review ID not found')
+                        })
+                    })
+                })
+                describe('PATCH: /api/reviews/:review_id', () => {
+                    test('status 200: responds with the correctly updated review', () => {
+                        const updateVotes = { inc_votes: 1};
+                        return request(app)
+                        .patch('/api/reviews/2')
+                        .send(updateVotes)
+                        .expect(200)
+                        .then(({ body }) => {
+                            const { review } = body;
+                            expect(review).toEqual({
+                                review_id: 2,
+                                title: 'Jenga',
+                                designer: 'Leslie Scott',
+                                owner: 'philippaclaire9',
+                                review_img_url: 'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
+                                review_body: 'Fiddly fun for all the family',
+                                category: 'dexterity',
+                                created_at: '2021-01-18T10:01:41.251Z',
+                                votes: 6
+                            })
+                        })
+                    })
+                    test('status 400: responds with error if inc_vote is not a number', () => {
+                        const updateVotes = { inc_votes: 'amazing'};
+                        return request(app)
+                        .patch('/api/reviews/2')
+                        .send(updateVotes)
+                        .expect(400)
+                        .then(({ body }) => {
+                            expect(body.msg).toBe('Please input a number')
                         })
                     })
                 })
