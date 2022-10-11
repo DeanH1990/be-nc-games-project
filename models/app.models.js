@@ -27,3 +27,20 @@ exports.selectUsers = () => {
         return users
     })
 }
+
+exports.patchReviewVotesById = (review_id, inc_votes) => {
+    if (typeof inc_votes !== 'number') {
+        return Promise.reject({ status: 400, msg: 'Wrong input'})
+    }
+    return db.query(`
+    UPDATE reviews 
+    SET votes = votes + $1
+    WHERE review_id = $2
+    RETURNING *;`, [inc_votes, review_id]
+    ).then(({ rows: [review] }) => {
+        if (review === undefined) {
+            return Promise.reject({ status: 404, msg: 'Review ID not found'})
+        }
+        return review
+    })
+}
