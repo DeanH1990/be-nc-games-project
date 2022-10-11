@@ -102,14 +102,44 @@ describe('app', () => {
                             })
                         })
                     })
-                    test('status 400: responds with error if inc_vote is not a number', () => {
-                        const updateVotes = { inc_votes: 'amazing'};
+                    test('status 400: responds with error if inc_votes is not a number', () => {
+                        const updateVotes = { inc_votes: 'amazing' };
                         return request(app)
                         .patch('/api/reviews/2')
                         .send(updateVotes)
                         .expect(400)
                         .then(({ body }) => {
-                            expect(body.msg).toBe('Please input a number')
+                            expect(body.msg).toBe('Wrong input')
+                        })
+                    })
+                    test('status 400: responds with error if incorrect key', () => {
+                        const updateVotes = { inc_vote: 5 };
+                        return request(app)
+                        .patch('/api/reviews/2')
+                        .send(updateVotes)
+                        .expect(400)
+                        .then(({ body }) => {
+                            expect(body.msg).toBe('Wrong input')
+                        })
+                    })
+                    test('status 400: responds with error if request body is empty', () => {
+                        const updateVotes = { };
+                        return request(app)
+                        .patch('/api/reviews/2')
+                        .send(updateVotes)
+                        .expect(400)
+                        .then(({ body }) => {
+                            expect(body.msg).toBe('Wrong input')
+                        })
+                    })
+                    test('status 404: responds with error if passed valid review id that is not present', () => {
+                        const updateVotes = { inc_votes: 5 };
+                        return request(app)
+                        .patch('/api/reviews/50')
+                        .send(updateVotes)
+                        .expect(404)
+                        .then(({ body }) => {
+                            expect(body.msg).toBe('Review ID not found')
                         })
                     })
                 })
