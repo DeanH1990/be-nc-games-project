@@ -81,7 +81,7 @@ describe('app', () => {
                         })
                     })
                 })
-                describe.only('PATCH: /api/reviews/:review_id', () => {
+                describe('PATCH: /api/reviews/:review_id', () => {
                     test('status 200: responds with the correctly updated review', () => {
                         const updateVotes = { inc_votes: 1};
                         return request(app)
