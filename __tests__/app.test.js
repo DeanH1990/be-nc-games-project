@@ -41,5 +41,47 @@ describe('app', () => {
                 })
             })
         })
+        describe('/reviews', () => {
+            describe('/:review_id', () => {
+                describe('GET: /api/reviews/:review_id', () => {
+                    test.only('status 200: responds with correct review from review id', () => {
+                        return request(app)
+                        .get('/api/reviews/12')
+                        .expect(200)
+                        .then(({ body }) => {
+                            const { review } = body;
+                            expect(review).toEqual({
+                                review_id: 12,
+                                title: `Scythe; you're gonna need a bigger table!`,
+                                review_body: 'Spend 30 minutes just setting up all of the boards (!) meeple and decks, just to forget how to play. Scythe can be a lengthy game but really packs a punch if you put the time in. With beautiful artwork, countless scenarios and clever game mechanics, this board game is a must for any board game fanatic; just make sure you explain ALL the rules before you start playing with first timers or you may find they bring it up again and again.',
+                                designer: 'Jamey Stegmaier',
+                                review_img_url: 'https://images.pexels.com/photos/163064/play-stone-network-networked-interactive-163064.jpeg',
+                                votes: 100,
+                                category: 'social deduction',
+                                owner: 'mallionaire',
+                                created_at: "2021-01-22T10:37:04.839Z"
+                            })
+                        })
+                    })
+                    test('status 400: responds with error passed an id of an incorrect type', () => {
+                        return request(app)
+                        .get('/api/reviews/not-a-number')
+                        .expect(400)
+                        .then(({ body }) => {
+                            expect(body.msg).toBe('Invalid ID type')
+                        })
+                    })
+                    test('status 404: responds with error when passed valud id type that is not present', () => {
+                        return request(app)
+                        .get('/api/reviews/50000')
+                        .expect(404)
+                        .then(({ body }) => {
+                            console.log(body)
+                            expect(body.msg).toBe('Review ID not found')
+                        })
+                    })
+                })
+            })
+        })
     })
 })
