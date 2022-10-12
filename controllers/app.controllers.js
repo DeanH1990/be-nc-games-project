@@ -40,4 +40,7 @@ exports.getReviews = (req, res, next) => {
     selectReviews(order).then((reviews) => {
         res.status(200).send({ reviews })
     })
+    .catch((err) => {
+        next(err)
+    })
 }
