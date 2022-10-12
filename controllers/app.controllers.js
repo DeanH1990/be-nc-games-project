@@ -23,6 +23,7 @@ exports.getUsers = (req, res, next) => {
         res.status(200).send({ users })
     })
 }
+
 exports.updateReviewVotesById = (req, res, next) => {
     const { inc_votes } = req.body;
     const { review_id } = req.params;
