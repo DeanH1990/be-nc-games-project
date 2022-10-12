@@ -45,20 +45,33 @@ exports.patchReviewVotesById = (review_id, inc_votes) => {
     })
 }
 
-exports.selectReviews = (order = 'created_at DESC') => {
-    const allowedOrders = ['created_at DESC', 'category'];
+exports.selectReviews = (category) => {
+    const allowedCategory = ['euro game', 'social deduction', 'dexterity', "children's games"];
 
-    if (!allowedOrders.includes(order)) {
-        return Promise.reject({ status: 400, msg: 'Invalid order'});
+    if (category) {
+        if (!allowedCategory.includes(category)) {
+            return Promise.reject({ status: 404, msg: 'Not found'});
+        }
     }
 
-    return db.query(`
+    let queryStr = `
     SELECT reviews.* ,
     COUNT(comments.comment_id) ::INT AS comment_count
     FROM reviews
-    LEFT JOIN comments ON comments.review_id = reviews.review_id
-    GROUP BY reviews.review_id
-    ORDER BY ${order};`).then(({ rows: reviews }) => {
+    LEFT JOIN comments ON comments.review_id = reviews.review_id`
+    const queryValues = [];
+
+    if (category) {
+        queryStr += ` WHERE reviews.category = $1`
+        queryValues.push(category)
+    }
+
+    queryStr += ` GROUP BY reviews.review_id ORDER BY created_at DESC;`
+
+    return db.query(queryStr, queryValues).then(({ rows: reviews }) => {
+        if (reviews.length === 0) {
+            return Promise.reject({ status: 404, msg: 'Not found'})
+        }
         return reviews
     })
 }
