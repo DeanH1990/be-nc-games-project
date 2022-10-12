@@ -40,3 +40,19 @@ exports.patchReviewVotesById = (review_id, inc_votes) => {
         return review
     })
 }
+
+exports.selectReviews = (order = 'created_at DESC') => {
+    const allowedOrders = ['created_at DESC', 'category'];
+
+    
+
+    return db.query(`
+    SELECT reviews.* ,
+    COUNT(comments.comment_id) ::INT AS comment_count
+    FROM reviews
+    LEFT JOIN comments ON comments.review_id = reviews.review_id
+    GROUP BY reviews.review_id
+    ORDER BY ${order};`).then(({ rows: reviews }) => {
+        return reviews
+    })
+}
