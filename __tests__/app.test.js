@@ -42,6 +42,52 @@ describe('app', () => {
             })
         })
         describe('/reviews', () => {
+            describe('GET: /api/reviews', () => {
+                test('status 200: responds with array of reviews that have comment_count key', () => {
+                    return request(app)
+                    .get('/api/reviews')
+                    .expect(200)
+                    .then(({ body }) => {
+                        const { reviews } = body;
+                        expect(reviews).toBeInstanceOf(Array);
+                        expect(reviews).toHaveLength(13);
+                        reviews.forEach(review => {
+                            expect(review).toEqual(
+                                expect.objectContaining({
+                                    owner: expect.any(String),
+                                    title: expect.any(String),
+                                    review_id: expect.any(Number),
+                                    category: expect.any(String),
+                                    review_img_url: expect.any(String),
+                                    created_at: expect.any(String),
+                                    votes: expect.any(Number),
+                                    designer: expect.any(String),
+                                    comment_count: expect.any(Number)
+                                })
+                            )
+                        })
+                    })
+                })
+                test.only('status 200: reviews are sorted by date in descending order by default', () => {
+                    return request(app)
+                    .get('/api/reviews')
+                    .expect(200)
+                    .then(({ body }) => {
+                        const { reviews } = body;
+                        expect(reviews).toBeSortedBy('created_at', { descending: true })
+                    })
+                })
+                test.only('status 200: allows reviews to be sorted by category, asc by default', () => {
+                    return request(app)
+                    .get('/api/reviews?order=category')
+                    .expect(200)
+                    .then(({ body }) => {
+                        const { reviews } = body;
+                        console.log(reviews)
+                        expect(reviews).toBeSortedBy('category')
+                    })
+                })
+            })
             describe('/:review_id', () => {
                 describe('GET: /api/reviews/:review_id', () => {
                     test('status 200: responds with correct review from review id', () => {
