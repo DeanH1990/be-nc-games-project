@@ -68,7 +68,7 @@ describe('app', () => {
                         })
                     })
                 })
-                test.only('status 200: reviews are sorted by date in descending order by default', () => {
+                test('status 200: reviews are sorted by date in descending order by default', () => {
                     return request(app)
                     .get('/api/reviews')
                     .expect(200)
@@ -77,14 +77,21 @@ describe('app', () => {
                         expect(reviews).toBeSortedBy('created_at', { descending: true })
                     })
                 })
-                test.only('status 200: allows reviews to be sorted by category, asc by default', () => {
+                test('status 200: allows reviews to be sorted by category, asc by default', () => {
                     return request(app)
                     .get('/api/reviews?order=category')
                     .expect(200)
                     .then(({ body }) => {
                         const { reviews } = body;
-                        console.log(reviews)
                         expect(reviews).toBeSortedBy('category')
+                    })
+                })
+                test('status 400: responds with error if passed an invalid order query', () => {
+                    return request(app)
+                    .get('/api/reviews?order=boilermaker')
+                    .expect(400)
+                    .then(({ body }) => {
+                        expect(body.msg).toBe('Invalid order')
                     })
                 })
             })
@@ -117,7 +124,7 @@ describe('app', () => {
                             expect(body.msg).toBe('Invalid ID type')
                         })
                     })
-                    test('status 404: responds with error when passed valud id type that is not present', () => {
+                    test('status 404: responds with error when passed valid id type that is not present', () => {
                         return request(app)
                         .get('/api/reviews/50000')
                         .expect(404)
