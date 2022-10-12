@@ -50,7 +50,7 @@ describe('app', () => {
                         .expect(200)
                         .then(({ body }) => {
                             const { review } = body;
-                            expect(review).toEqual({
+                            expect(review).toMatchObject({
                                 review_id: 12,
                                 title: `Scythe; you're gonna need a bigger table!`,
                                 review_body: 'Spend 30 minutes just setting up all of the boards (!) meeple and decks, just to forget how to play. Scythe can be a lengthy game but really packs a punch if you put the time in. With beautiful artwork, countless scenarios and clever game mechanics, this board game is a must for any board game fanatic; just make sure you explain ALL the rules before you start playing with first timers or you may find they bring it up again and again.',
@@ -60,7 +60,27 @@ describe('app', () => {
                                 category: 'social deduction',
                                 owner: 'mallionaire',
                                 created_at: "2021-01-22T10:37:04.839Z",
-                                comment_count: 0
+                            })
+                        })
+                    })
+                    test('status 200: responds with correct review with comment_count on returned object', () => {
+                        return request(app)
+                        .get('/api/reviews/3')
+                        .expect(200)
+                        .then(({ body }) => {
+                            const { review } = body;
+                            expect(review).toMatchObject({
+                                review_id: 3,
+                                title: 'Ultimate Werewolf',
+                                designer: 'Akihisa Okui',
+                                owner: 'bainesface',
+                                review_img_url:
+                                'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png',
+                                review_body: "We couldn't find the werewolf!",
+                                category: 'social deduction',
+                                created_at: '2021-01-18T10:01:41.251Z',
+                                votes: 5,
+                                comment_count: 3
                             })
                         })
                     })
