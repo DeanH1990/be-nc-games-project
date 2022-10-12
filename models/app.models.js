@@ -44,3 +44,17 @@ exports.patchReviewVotesById = (review_id, inc_votes) => {
         return review
     })
 }
+
+exports.selectCommentsByReviewId = (review_id) => {
+    return db.query(`
+    SELECT comments.* 
+    FROM comments
+    WHERE review_id = $1
+    ORDER BY created_at DESC`, [review_id]).then(({ rows: comments }) => {
+        if (comments.length === 0) {
+            return Promise.reject({ status: 404, msg: 'Not found'})
+        }
+        return comments
+    })
+}
+
