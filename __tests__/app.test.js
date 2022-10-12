@@ -77,21 +77,32 @@ describe('app', () => {
                         expect(reviews).toBeSortedBy('created_at', { descending: true })
                     })
                 })
-                test('status 200: allows reviews to be sorted by category, asc by default', () => {
+                test('status 200: allows reviews to be sorted by category', () => {
                     return request(app)
-                    .get('/api/reviews?order=category')
+                    .get("/api/reviews?category=social deduction")
                     .expect(200)
                     .then(({ body }) => {
                         const { reviews } = body;
-                        expect(reviews).toBeSortedBy('category')
+                        expect(reviews).toHaveLength(11);
+                        reviews.forEach(review => {
+                            expect(review.category).toBe('social deduction')
+                        })
                     })
                 })
-                test('status 400: responds with error if passed an invalid order query', () => {
+                test('status 404: responds with error if passed an invalid category query', () => {
                     return request(app)
-                    .get('/api/reviews?order=boilermaker')
-                    .expect(400)
+                    .get('/api/reviews?category=bananas')
+                    .expect(404)
                     .then(({ body }) => {
-                        expect(body.msg).toBe('Invalid order')
+                        expect(body.msg).toBe('Not found')
+                    })
+                })
+                test('status 404: responds with error if valid category but no results', () => {
+                    return request(app)
+                    .get("/api/reviews?category=children's games")
+                    .expect(404)
+                    .then(({ body }) => {
+                        expect(body.msg).toBe('Not found')
                     })
                 })
             })
