@@ -44,7 +44,9 @@ exports.patchReviewVotesById = (review_id, inc_votes) => {
 exports.selectReviews = (order = 'created_at DESC') => {
     const allowedOrders = ['created_at DESC', 'category'];
 
-    
+    if (!allowedOrders.includes(order)) {
+        return Promise.reject({ status: 400, msg: 'Invalid order'});
+    }
 
     return db.query(`
     SELECT reviews.* ,
