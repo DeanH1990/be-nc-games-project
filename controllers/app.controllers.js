@@ -1,4 +1,4 @@
-const { selectCategories, selectReviewById, selectUsers, patchReviewVotesById } = require("../models/app.models")
+const { selectCategories, selectReviewById, selectUsers, patchReviewVotesById, selectReviews } = require("../models/app.models")
 
 
 
@@ -29,6 +29,16 @@ exports.updateReviewVotesById = (req, res, next) => {
     const { review_id } = req.params;
     patchReviewVotesById(review_id, inc_votes).then((review) => {
         res.status(200).send({ review })
+    })
+    .catch((err) => {
+        next(err)
+    })
+}
+
+exports.getReviews = (req, res, next) => {
+    const { category } = req.query;
+    selectReviews(category).then((reviews) => {
+        res.status(200).send({ reviews })
     })
     .catch((err) => {
         next(err)
