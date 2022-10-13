@@ -46,14 +46,6 @@ exports.patchReviewVotesById = (review_id, inc_votes) => {
 }
 
 exports.selectReviews = (category) => {
-    const allowedCategory = ['euro game', 'social deduction', 'dexterity', "children's games"];
-
-    if (category) {
-        if (!allowedCategory.includes(category)) {
-            return Promise.reject({ status: 404, msg: 'Not found'});
-        }
-    }
-
     let queryStr = `
     SELECT reviews.* ,
     COUNT(comments.comment_id) ::INT AS comment_count
@@ -68,9 +60,23 @@ exports.selectReviews = (category) => {
 
     queryStr += ` GROUP BY reviews.review_id ORDER BY created_at DESC;`
 
-    return db.query(queryStr, queryValues).then(({ rows: reviews }) => {
+    const promises = [db.query(queryStr, queryValues)];
+
+    if (category) {
+        const secondQuery = db.query(`SELECT * FROM categories WHERE slug = $1`, queryValues);
+        promises.push(secondQuery)
+    }
+    return Promise.all(promises).then((result) => {
+        const reviews = result[0].rows;
+        let categories 
+        if (category) {
+            categories = result[1].rows;
+        }
         if (reviews.length === 0) {
-            return Promise.reject({ status: 404, msg: 'Not found'})
+            if (categories.length === 0) {
+               return Promise.reject({ status: 404, msg: 'Not found' })  
+            }
+            return reviews
         }
         return reviews
     })
