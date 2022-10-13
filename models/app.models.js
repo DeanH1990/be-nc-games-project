@@ -68,7 +68,7 @@ exports.selectReviews = (category) => {
     }
     return Promise.all(promises).then((result) => {
         const reviews = result[0].rows;
-        let categories 
+        let categories
         if (category) {
             categories = result[1].rows;
         }
@@ -83,14 +83,27 @@ exports.selectReviews = (category) => {
 }
 
 exports.selectCommentsByReviewId = (review_id) => {
-    return db.query(`
+
+    const collectPromises = [db.query(`
     SELECT comments.* 
     FROM comments
     WHERE review_id = $1
-    ORDER BY created_at DESC`, [review_id]).then(({ rows: comments }) => {
-        if (comments.length === 0) {
-            return Promise.reject({ status: 404, msg: 'Not found'})
+    ORDER BY created_at DESC`, [review_id])]
+
+    if (review_id) {
+        const secondPromise = db.query(`SELECT * FROM reviews WHERE review_id = $1`, [review_id])
+        collectPromises.push(secondPromise);
+    }
+
+    return Promise.all(collectPromises).then((result) => {
+        const comment = result[0].rows;
+        const reviewId = result[1].rows
+        if (comment.length === 0) {
+            if (reviewId.length === 0) {
+                return Promise.reject({ status: 404, msg: 'Not found' })
+            }
+            return comment
         }
-        return comments
+        return comment
     })
 }
