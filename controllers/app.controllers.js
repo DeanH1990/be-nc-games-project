@@ -48,5 +48,8 @@ exports.getCommentsByReviewId = (req, res, next) => {
     selectCommentsByReviewId(review_id).then((comments) => {
         res.status(200).send({ comments })
     })
+    .catch((err) => {
+        next(err)
+    })
 }
 
