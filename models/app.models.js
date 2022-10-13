@@ -45,6 +45,43 @@ exports.patchReviewVotesById = (review_id, inc_votes) => {
     })
 }
 
+exports.selectReviews = (category) => {
+    let queryStr = `
+    SELECT reviews.* ,
+    COUNT(comments.comment_id) ::INT AS comment_count
+    FROM reviews
+    LEFT JOIN comments ON comments.review_id = reviews.review_id`
+    const queryValues = [];
+
+    if (category) {
+        queryStr += ` WHERE reviews.category = $1`
+        queryValues.push(category)
+    }
+
+    queryStr += ` GROUP BY reviews.review_id ORDER BY created_at DESC;`
+
+    const promises = [db.query(queryStr, queryValues)];
+
+    if (category) {
+        const secondQuery = db.query(`SELECT * FROM categories WHERE slug = $1`, queryValues);
+        promises.push(secondQuery)
+    }
+    return Promise.all(promises).then((result) => {
+        const reviews = result[0].rows;
+        let categories 
+        if (category) {
+            categories = result[1].rows;
+        }
+        if (reviews.length === 0) {
+            if (categories.length === 0) {
+               return Promise.reject({ status: 404, msg: 'Not found' })  
+            }
+            return reviews
+        }
+        return reviews
+    })
+}
+
 exports.selectCommentsByReviewId = (review_id) => {
     return db.query(`
     SELECT comments.* 
@@ -57,4 +94,3 @@ exports.selectCommentsByReviewId = (review_id) => {
         return comments
     })
 }
-

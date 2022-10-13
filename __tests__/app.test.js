@@ -42,6 +42,73 @@ describe('app', () => {
             })
         })
         describe('/reviews', () => {
+            describe.only('GET: /api/reviews', () => {
+                test('status 200: responds with array of reviews that have comment_count key', () => {
+                    return request(app)
+                    .get('/api/reviews')
+                    .expect(200)
+                    .then(({ body }) => {
+                        const { reviews } = body;
+                        expect(reviews).toBeInstanceOf(Array);
+                        expect(reviews).toHaveLength(13);
+                        reviews.forEach(review => {
+                            expect(review).toEqual(
+                                expect.objectContaining({
+                                    owner: expect.any(String),
+                                    title: expect.any(String),
+                                    review_id: expect.any(Number),
+                                    category: expect.any(String),
+                                    review_img_url: expect.any(String),
+                                    created_at: expect.any(String),
+                                    votes: expect.any(Number),
+                                    designer: expect.any(String),
+                                    comment_count: expect.any(Number)
+                                })
+                            )
+                        })
+                    })
+                })
+                test('status 200: reviews are sorted by date in descending order by default', () => {
+                    return request(app)
+                    .get('/api/reviews')
+                    .expect(200)
+                    .then(({ body }) => {
+                        const { reviews } = body;
+                        expect(reviews).toBeSortedBy('created_at', { descending: true })
+                    })
+                })
+                test('status 200: allows reviews to be sorted by category', () => {
+                    return request(app)
+                    .get("/api/reviews?category=social deduction")
+                    .expect(200)
+                    .then(({ body }) => {
+                        const { reviews } = body;
+                        expect(reviews).toHaveLength(11);
+                        reviews.forEach(review => {
+                            expect(review.category).toBe('social deduction')
+                        })
+                    })
+                })
+                test('status 200: responds with empty array if valid category but no results', () => {
+                    return request(app)
+                    .get("/api/reviews?category=children's games")
+                    .expect(200)
+                    .then(({ body }) => {
+                        const { reviews } = body;
+                        expect(reviews).toHaveLength(0)
+                        expect(reviews).toEqual([])
+                    })
+                })
+                test('status 404: responds with error if passed an invalid category query', () => {
+                    return request(app)
+                    .get('/api/reviews?category=bananas')
+                    .expect(404)
+                    .then(({ body }) => {
+                        expect(body.msg).toBe('Not found')
+                    })
+                })
+                
+            })
             describe('/:review_id', () => {
                 describe('GET: /api/reviews/:review_id', () => {
                     test('status 200: responds with correct review from review id', () => {
@@ -92,7 +159,7 @@ describe('app', () => {
                             expect(body.msg).toBe('Invalid ID type')
                         })
                     })
-                    test('status 404: responds with error when passed valud id type that is not present', () => {
+                    test('status 404: responds with error when passed valid id type that is not present', () => {
                         return request(app)
                         .get('/api/reviews/50000')
                         .expect(404)
