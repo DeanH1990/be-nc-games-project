@@ -42,7 +42,7 @@ describe('app', () => {
             })
         })
         describe('/reviews', () => {
-            describe('GET: /api/reviews', () => {
+            describe.only('GET: /api/reviews', () => {
                 test('status 200: responds with array of reviews that have comment_count key', () => {
                     return request(app)
                     .get('/api/reviews')
@@ -89,6 +89,16 @@ describe('app', () => {
                         })
                     })
                 })
+                test('status 200: responds with empty array if valid category but no results', () => {
+                    return request(app)
+                    .get("/api/reviews?category=children's games")
+                    .expect(200)
+                    .then(({ body }) => {
+                        const { reviews } = body;
+                        expect(reviews).toHaveLength(0)
+                        expect(reviews).toEqual([])
+                    })
+                })
                 test('status 404: responds with error if passed an invalid category query', () => {
                     return request(app)
                     .get('/api/reviews?category=bananas')
@@ -97,14 +107,7 @@ describe('app', () => {
                         expect(body.msg).toBe('Not found')
                     })
                 })
-                test('status 404: responds with error if valid category but no results', () => {
-                    return request(app)
-                    .get("/api/reviews?category=children's games")
-                    .expect(404)
-                    .then(({ body }) => {
-                        expect(body.msg).toBe('Not found')
-                    })
-                })
+                
             })
             describe('/:review_id', () => {
                 describe('GET: /api/reviews/:review_id', () => {
