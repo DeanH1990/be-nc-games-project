@@ -42,7 +42,7 @@ describe('app', () => {
             })
         })
         describe('/reviews', () => {
-            describe.only('GET: /api/reviews', () => {
+            describe('GET: /api/reviews', () => {
                 test('status 200: responds with array of reviews that have comment_count key', () => {
                     return request(app)
                     .get('/api/reviews')
@@ -232,7 +232,7 @@ describe('app', () => {
                     })
                 })
                 describe('/comments', () => {
-                    describe('GET: /api/reviews/:review_id/comments', () => {
+                    describe.only('GET: /api/reviews/:review_id/comments', () => {
                         test('status 200: responds with array of comments for given review_id', () => {
                             return request(app)
                             .get('/api/reviews/2/comments')
@@ -264,6 +264,16 @@ describe('app', () => {
                                 expect(comments).toBeSortedBy('created_at', { descending: true });
                             })
                         })
+                        test('status 200: responds with error if correct id but no comments exist', () => {
+                            return request(app)
+                            .get('/api/reviews/12/comments')
+                            .expect(200)
+                            .then(({ body }) => {
+                                const { comments } = body;
+                                expect(comments).toHaveLength(0);
+                                expect(comments).toEqual([])
+                            })
+                        })
                         test('status 400: responds with error if invalid review id type', () => {
                             return request(app)
                             .get('/api/reviews/gimme/comments')
@@ -275,14 +285,6 @@ describe('app', () => {
                         test('status 404: responds with error if valid id type but review does not exist', () => {
                             return request(app)
                             .get('/api/reviews/15/comments')
-                            .expect(404)
-                            .then(({ body }) => {
-                                expect(body.msg).toBe('Not found')
-                            })
-                        })
-                        test('status 404: responds with error if correct id but no comments exist', () => {
-                            return request(app)
-                            .get('/api/reviews/12/comments')
                             .expect(404)
                             .then(({ body }) => {
                                 expect(body.msg).toBe('Not found')
