@@ -232,7 +232,7 @@ describe('app', () => {
                     })
                 })
                 describe('/comments', () => {
-                    describe.only('GET: /api/reviews/:review_id/comments', () => {
+                    describe('GET: /api/reviews/:review_id/comments', () => {
                         test('status 200: responds with array of comments for given review_id', () => {
                             return request(app)
                             .get('/api/reviews/2/comments')
@@ -285,6 +285,74 @@ describe('app', () => {
                         test('status 404: responds with error if valid id type but review does not exist', () => {
                             return request(app)
                             .get('/api/reviews/15/comments')
+                            .expect(404)
+                            .then(({ body }) => {
+                                expect(body.msg).toBe('Not found')
+                            })
+                        })
+                    })
+                    describe('POST: /api/reviews/:review_id/comments', () => {
+                        test('status 201: responds with a new comment when posted from a username with a body', () => {
+                            const newComment = {
+                                username: 'bainesface',
+                                body: 'Ah MAZING!'
+                            };
+                            return request(app)
+                            .post('/api/reviews/2/comments')
+                            .send(newComment)
+                            .expect(201)
+                            .then(({ body }) => {
+                                const { comment } = body;
+                                expect(comment).toMatchObject({
+                                    comment_id: 7,
+                                    review_id: 2,
+                                    author: 'bainesface',
+                                    body: 'Ah MAZING!',
+                                    votes: 0,
+                                    created_at: expect.any(String)
+                                })
+                            })
+                        })
+                        test('status 400: responds with error if invalid review id type', () => {
+                            return request(app)
+                            .post('/api/reviews/scythe/comments')
+                            .send({ username: 'bainesface', body: 'A must play!' })
+                            .expect(400)
+                            .then(({ body }) => {
+                                expect(body.msg).toBe('Invalid ID type')
+                            })
+                        })
+                        test('status 400: responds with error if request body missing username', () => {
+                            return request(app)
+                            .post('/api/reviews/2/comments')
+                            .send({ username: '', body: 'A must play!' })
+                            .expect(400)
+                            .then(({ body }) => {
+                                expect(body.msg).toBe('Invalid input')
+                            })
+                        })
+                        test('status 400: responds with error if request body missing body', () => {
+                            return request(app)
+                            .post('/api/reviews/2/comments')
+                            .send({ username: 'bainesface', body: '' })
+                            .expect(400)
+                            .then(({ body }) => {
+                                expect(body.msg).toBe('Invalid input')
+                            })
+                        })
+                        test('status 404: responds with error if valid id type but review does not exist', () => {
+                            return request(app)
+                            .post('/api/reviews/15/comments')
+                            .send({ username: 'bainesface', body: 'A must play!' })
+                            .expect(404)
+                            .then(({ body }) => {
+                                expect(body.msg).toBe('Not found')
+                            })
+                        })
+                        test('status 404: responds with error if user does not exist', () => {
+                            return request(app)
+                            .post('/api/reviews/15/comments')
+                            .send({ username: 'greeGiant', body: 'A must play!' })
                             .expect(404)
                             .then(({ body }) => {
                                 expect(body.msg).toBe('Not found')
