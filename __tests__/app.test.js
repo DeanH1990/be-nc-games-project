@@ -385,5 +385,33 @@ describe('app', () => {
                 })
             })
         })
+        describe('/comments', () => {
+            describe('/:comment_id', () => {
+                describe('DELETE: /api/comments/:comment_id', () => {
+                    test.only('status 204: responds with 204 no content status', () => {
+                        return request(app)
+                        .delete('/api/comments/5')
+                        .expect(204)
+                    })
+                    test.only('status 400: responds with error if passed invalid comment_id', () => {
+                        return request(app)
+                        .delete('/api/comments/lastComment')
+                        .expect(400)
+                        .then(({ body }) => {
+                            expect(body.msg).toBe('Invalid ID type')
+                        })
+                    })
+                    test.only('status 404: responds with error if passed valid comment_id but does not exist', () => {
+                        return request(app)
+                        .delete('/api/comments/10')
+                        .expect(404)
+                        .then(({ body }) => {
+                            
+                            expect(body.msg).toBe('Not found')
+                        })
+                    })
+                })
+            })
+        })
     })
 })
