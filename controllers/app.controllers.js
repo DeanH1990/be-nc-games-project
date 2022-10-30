@@ -1,4 +1,4 @@
-const { selectCategories, selectReviewById, selectUsers, patchReviewVotesById, selectReviews, selectCommentsByReviewId, insertCommentByReviewId } = require("../models/app.models")
+const { selectCategories, selectReviewById, selectUsers, patchReviewVotesById, selectReviews, selectCommentsByReviewId, insertCommentByReviewId, deleteCommentById } = require("../models/app.models")
 
 exports.getCategories = (req, res, next) => {
     selectCategories().then((categories) => {
@@ -59,6 +59,16 @@ exports.createCommentByReviewId = (req, res, next) => {
 
     insertCommentByReviewId(review_id, req.body).then((comment) => {
         res.status(201).send({ comment })
+    })
+    .catch((err) => {
+        next(err)
+    })
+}
+
+exports.removeCommentById = (req, res, next) => {
+    const { comment_id } = req.params;
+    deleteCommentById(comment_id).then(() => {
+        res.status(204).send()
     })
     .catch((err) => {
         next(err)
