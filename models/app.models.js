@@ -45,7 +45,21 @@ exports.patchReviewVotesById = (review_id, inc_votes) => {
     })
 }
 
-exports.selectReviews = (category) => {
+exports.selectReviews = (category, sort_by, order) => {
+    const allowedSortBys = ['review_id', 'title', 'designer', 'owner', 'review_img_url', 'review_body', 'category', 'votes'];
+
+    if (sort_by) {
+        if(!allowedSortBys.includes(sort_by)) {
+            return Promise.reject({ status: 400, msg: 'Invalid query' })
+        }
+    }
+
+    if (order) {
+        if(!['asc', 'desc'].includes(order)) {
+            return Promise.reject({ status: 400, msg: 'Invalid query' })
+        }
+    }
+    
     let queryStr = `
     SELECT reviews.* ,
     COUNT(comments.comment_id) ::INT AS comment_count
@@ -58,7 +72,19 @@ exports.selectReviews = (category) => {
         queryValues.push(category)
     }
 
-    queryStr += ` GROUP BY reviews.review_id ORDER BY created_at DESC;`
+    queryStr += ` GROUP BY reviews.review_id`;
+
+    if (sort_by) {
+        queryStr += ` ORDER BY ${sort_by}`
+    } else {
+        queryStr += ` ORDER BY created_at`
+    }
+
+    if (order === 'asc') {
+        queryStr += ` ASC;`
+    } else {
+        queryStr += ` DESC;`
+    }
 
     const promises = [db.query(queryStr, queryValues)];
 

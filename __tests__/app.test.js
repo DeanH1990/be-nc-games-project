@@ -99,6 +99,55 @@ describe('app', () => {
                         expect(reviews).toEqual([])
                     })
                 })
+                test('status 200: responds with reviews sorted by given column', () => {
+                    return request(app)
+                    .get('/api/reviews?sort_by=votes')
+                    .expect(200)
+                    .then(({ body }) => {
+                        const { reviews } = body;
+                        expect(reviews).toHaveLength(13);
+                        expect(reviews).toBeSortedBy('votes', { descending: true })
+                    })
+                })
+                test('status 200: responds with reviews ordered in ascending order when specified', () => {
+                    return request(app)
+                    .get('/api/reviews?order=asc')
+                    .expect(200)
+                    .then(({ body }) => {
+                        const { reviews } = body;
+                        expect(reviews).toHaveLength(13);
+                        expect(reviews).toBeSortedBy('created_at', { ascending: true })
+                    })
+                })
+                test('status 400: responds with error if passed invalid order query', () => {
+                    return request(app)
+                    .get('/api/reviews?order=upwards')
+                    .expect(400)
+                    .then(({ body }) => {
+                        expect(body.msg).toBe('Invalid query')
+                    })
+                })
+                test('status 200: responds with selected reviews when given all 3 search order queries', () => {
+                    return request(app)
+                    .get('/api/reviews?order=asc&category=social deduction&sort_by=review_id')
+                    .expect(200)
+                    .then(({ body }) => {
+                        const { reviews } = body;
+                        expect(reviews).toHaveLength(11);
+                        expect(reviews).toBeSortedBy('review_id');
+                        reviews.forEach(review => {
+                            expect(review.category).toBe('social deduction')
+                        })
+                    })
+                })
+                test('status 400: responds with error if given invalid sort_by query', () => {
+                    return request(app)
+                    .get('/api/reviews?sort_by=carrots')
+                    .expect(400)
+                    .then(({ body }) => {
+                        expect(body.msg).toBe('Invalid query')
+                    })
+                })
                 test('status 404: responds with error if passed an invalid category query', () => {
                     return request(app)
                     .get('/api/reviews?category=bananas')
