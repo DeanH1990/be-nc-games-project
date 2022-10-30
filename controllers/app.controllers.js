@@ -1,4 +1,9 @@
-const { selectCategories, selectReviewById, selectUsers, patchReviewVotesById, selectReviews, selectCommentsByReviewId, insertCommentByReviewId, deleteCommentById } = require("../models/app.models")
+const { selectCategories, selectReviewById, selectUsers, patchReviewVotesById, selectReviews, selectCommentsByReviewId, insertCommentByReviewId, deleteCommentById } = require("../models/app.models");
+const apiEndpoints = require('../endpoints.json');
+
+exports.getApi = (req, res, next) => {
+    res.send(apiEndpoints);
+}
 
 exports.getCategories = (req, res, next) => {
     selectCategories().then((categories) => {

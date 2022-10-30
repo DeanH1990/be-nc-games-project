@@ -19,6 +19,27 @@ describe('app', () => {
         })
     })
     describe('/api', () => {
+        describe('GET: /api', () => {
+            test('200: responds with an object containing all endpoints', () => {
+                const endpoints = {
+                    "GET /api": expect.any(Object),
+                    "GET /api/categories": expect.any(Object),
+                    "GET /api/reviews": expect.any(Object),
+                    "GET /api/reviews/:review_id": expect.any(Object),
+                    "PATCH /api/reviews/:review_id": expect.any(Object),
+                    "GET /api/reviews/:review_id/comments": expect.any(Object),
+                    "POST /api/reviews/:review_id/comments": expect.any(Object),
+                    "GET /api/users": expect.any(Object),
+                    "DELETE /api/comments/:comment_id": expect.any(Object)
+                }
+                return request(app)
+                .get('/api')
+                .expect(200)
+                .then(({ body }) => {
+                    expect(body).toMatchObject(endpoints)
+                })
+            })
+        })
         describe('/categories', () => {
             describe('GET: /api/categories', () => {
                 test('status 200: responds with an array of categories', () => {
@@ -437,12 +458,12 @@ describe('app', () => {
         describe('/comments', () => {
             describe('/:comment_id', () => {
                 describe('DELETE: /api/comments/:comment_id', () => {
-                    test.only('status 204: responds with 204 no content status', () => {
+                    test('status 204: responds with 204 no content status', () => {
                         return request(app)
                         .delete('/api/comments/5')
                         .expect(204)
                     })
-                    test.only('status 400: responds with error if passed invalid comment_id', () => {
+                    test('status 400: responds with error if passed invalid comment_id', () => {
                         return request(app)
                         .delete('/api/comments/lastComment')
                         .expect(400)
@@ -450,7 +471,7 @@ describe('app', () => {
                             expect(body.msg).toBe('Invalid ID type')
                         })
                     })
-                    test.only('status 404: responds with error if passed valid comment_id but does not exist', () => {
+                    test('status 404: responds with error if passed valid comment_id but does not exist', () => {
                         return request(app)
                         .delete('/api/comments/10')
                         .expect(404)

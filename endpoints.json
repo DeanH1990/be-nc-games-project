@@ -16,7 +16,36 @@
   },
   "GET /api/reviews": {
     "description": "serves an array of all reviews",
-    "queries": ["category", "sort_by", "order"],
+    "queries":  ["category", "sort_by", "order"],
+    "acceptedQueries": [
+      {
+        "category": [
+          "hidden-roles", 
+          "dexterity", 
+          "strategy", 
+          "deck-building", 
+          "engine-building", 
+          "push-your-luck", 
+          "roll-and-write"
+        ]
+      },
+      { "sort_by": [
+        "review_id", 
+        "title",
+        "category",
+        "designer",
+        "owner", 
+        "review_body",
+        "review_img_url",
+        "created_at",
+        "votes",
+        "comment_count"
+      ]
+    },
+    {
+      "order": ["asc", "desc"]
+    }
+    ],
     "exampleResponse": {
       "reviews": [
         {
@@ -30,5 +59,82 @@
         }
       ]
     }
+  },
+  "GET /api/reviews/:review_id": {
+    "description": "serves a review object containing the information related to that review id",
+    "acceptedParameterDataType": "number",
+    "exampleResponse": {
+      "review_id": 5,
+      "title": "A truly Quacking Game; Quacks of Quedlinburg",
+      "category": "push-your-luck",
+      "designer": "Wolfgang Warsch",
+      "owner": "happyamy2016",
+      "review_body": "Ever wish you could try your hand at mixing potions? Quacks of Quedlinburg will have you mixing up a homebrew like no other. Each player buys different ingredients (chips) that are drawn at random to reach the most points, but watch out, you'd better not let your cauldrom explode.",
+      "review_img_url": "https://images.pexels.com/photos/163064/play-stone-network-networked-interactive-163064.jpeg",
+      "created_at": "2021-01-18T10:01:41.251Z",
+      "votes": 10,
+      "comment_count": 1
+    }
+  },
+  "PATCH /api/reviews/:review_id": {
+    "description": "serves a review object with the votes updated by the amount sent in the patch body",
+    "examplePatchRequest": { "inc_votes": 50 },
+    "exampleResponse": {
+      "review_id": 3,
+      "title": "Karma Karma Chameleon",
+      "category": "hidden-roles",
+      "designer": "Rikki Tahta",
+      "owner": "happyamy2016",
+      "review_body": "Try to trick your friends. If you find yourself being dealt the Chamelean card then the aim of the game is simple; blend in... Meanwhile the other players aim to be as vague as they can to not give the game away ",
+      "review_img_url": "https://images.pexels.com/photos/5350049/pexels-photo-5350049.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+      "created_at": "2021-01-18T10:01:42.151Z",
+      "votes": 55,
+      "comment_count": 5
+    }
+  },
+  "GET /api/reviews/:review_id/comments": {
+    "description": "serves an array of all comments related to the specified review id",
+    "acceptedParameterDataType": "number",
+    "exampleResponse": [
+      {
+        "comment_id": 19,
+        "body": "Quis duis mollit ad enim deserunt.",
+        "review_id": 3,
+        "author": "jessjelly",
+        "votes": 3,
+        "created_at": "2021-03-27T19:48:58.110Z"
+      },
+      {
+        "comment_id": 20,
+        "body": "Laboris nostrud ea ex occaecat aute quis consectetur anim.",
+        "review_id": 3,
+        "author": "cooljmessy",
+        "votes": 17,
+        "created_at": "2021-03-27T14:15:38.110Z"
+      }
+    ]
+  },
+  "POST /api/reviews/:review_id/comments": {
+    "description": "when passed valid username and body serves a comment object related to the given review id",
+    "examplePostRequest": { "username": "bainesface", "body": "A must play!" }
+  },
+  "GET /api/users": {
+    "description": "serves an object with an array of user objects",
+    "exampleResponse": [
+      {
+        "username": "tickle122",
+        "name": "Tom Tickle",
+        "avatar_url": "https://vignette.wikia.nocookie.net/mrmen/images/d/d6/Mr-Tickle-9a.png/revision/latest?cb=20180127221953"
+      },
+      {
+        "username": "grumpy19",
+        "name": "Paul Grump",
+        "avatar_url": "https://vignette.wikia.nocookie.net/mrmen/images/7/78/Mr-Grumpy-3A.PNG/revision/latest?cb=20170707233013"
+      }
+    ]
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "servesan empty object on successful delete request",
+    "exampleResponse": {}
   }
 }
