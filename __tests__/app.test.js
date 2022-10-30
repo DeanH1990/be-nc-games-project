@@ -99,7 +99,7 @@ describe('app', () => {
                         expect(reviews).toEqual([])
                     })
                 })
-                test('status 200: responds with reviews sorted by given column - votes', () => {
+                test('status 200: responds with reviews sorted by given column', () => {
                     return request(app)
                     .get('/api/reviews?sort_by=votes')
                     .expect(200)
