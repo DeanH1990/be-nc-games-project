@@ -134,7 +134,7 @@
     ]
   },
   "DELETE /api/comments/:comment_id": {
-    "description": "servesan empty object on successful delete request",
+    "description": "serve an empty object on successful delete request",
     "exampleResponse": {}
   }
 }
