@@ -7,6 +7,7 @@ app.use(cors());
 const app = express();
 
 app.use(express.json())
+app.use(cors());
 
 app.get('/api', getApi);
 app.get('/api/categories', getCategories);
