@@ -1,6 +1,8 @@
 const express = require('express');
 const { getApi, getCategories, getReviewById, getUsers, updateReviewVotesById, getReviews, getCommentsByReviewId, createCommentByReviewId, removeCommentById } = require('./controllers/app.controllers');
-const cors = require('cors')
+const cors = require('cors');
+
+app.use(cors());
 
 const app = express();
 
