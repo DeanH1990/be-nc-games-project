@@ -46,7 +46,7 @@ exports.patchReviewVotesById = (review_id, inc_votes) => {
 }
 
 exports.selectReviews = (category, sort_by, order) => {
-    const allowedSortBys = ['review_id', 'title', 'designer', 'owner', 'review_img_url', 'review_body', 'category', 'votes'];
+    const allowedSortBys = ['review_id', 'title', 'designer', 'owner', 'review_img_url', 'review_body', 'category', 'comment_count', 'created_at', 'votes'];
 
     if (sort_by) {
         if(!allowedSortBys.includes(sort_by)) {
