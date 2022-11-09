@@ -1,10 +1,49 @@
-# Northcoders House of Games API
+# NC Games API
 
 ## Welcome to my game API
 
+### Description
+
+The aim of this project was to build an api with accessible data stored within a postgreSQL database. 
+
+The server can be used to access/ read <mark>reviews</mark>, <mark>categories</mark>, <mark>users</mark> and <mark>comments</mark>. It also has functionality to <mark>post</mark> new comments, <mark>update</mark> votes on reviews and <mark>delete</mark> comments.
+
+This api has been built using Test Driven Development using the Jest testing framework. Other practices that have been used include pull requests and implementing new features on new branches.
+
+### Hosting
+
+The hosted version of this repo can be found here:
+
+(https://dh-nc-games.herokuapp.com/api/)
+
 ### How to use this repo
 
-In order to clone and run the files you will need to create two .env files. These files will allow the creation of the test and development data.
+#### Cloning the repo
+
+In order to clone the repo you will need to fork it to youyr github. You can then clone the forked repo using the following command:
+
+    git clone <forked repo url link>
+
+#### Installing dependencies
+
+The following dependencies have been used to build this project:
+- cors
+- dotenv
+- express
+- pg
+- pg-format
+- jest
+- jest-extended
+- jest-sorted
+- supertest
+
+Use the following command to install the dependencies:
+
+    npm i
+
+#### Environment variables
+
+In order to run the files you will need to create two .env files. These files will allow the creation of the test and development data.
 
 1. Create a .env.test file.
 
@@ -20,47 +59,3 @@ This will create the main development database.
 
 These files will both need to be added to a .gitignore file in order to prevent them being committed to github.
 To ignore both you can add .env.* in the .gitignore file. This will ignore all .env files.
-
-**Please ensure you work through the tickets in numerical order.**
-
-## Git Branching and Pull Requests
-
-You will be working on each ticket on a new **branch**.
-
-To create and switch to a new git branch use the command:
-
-```
-git checkout -b <new branch name>
-```
-
-This will create a branch and move over to that branch. (Omit the `-b` flag if you wish to switch to an already existing branch).
-
-We recommend that you name the branch after the number assigned to each ticket via the header. eg. `ncnews-1`
-
-When pushing the branch to git hub ensure that you make reference to the branch you are pushing to on the remote.
-
-```
-git push origin <branch name>
-```
-
-From github you can make a pull request and share the link and ticket number via a pull request specific nchelp using the command `nchelp pr`. A tutor will swing by to review your code. Ensure that you keep your trello up to date whilst you await the PR approval. Regular `nchelp` will be available for when you need support.
-
-Once a pull request been accepted be sure to switch back to the main branch and pull down the updated changes.
-
-```
-git checkout main
-
-git pull origin main
-```
-
-You can tidy up your local branches once they have been pull into main by deleting them:
-
-```
-git branch -D <local branch>
-```
-
-## Husky
-
-To ensure we are not commiting broken code this project makes use of git hooks. Git hooks are scripts triggered during certain events in the git lifecycle. Husky is a popular package which allows us to set up and maintain these scripts. This project makes use a _pre-commit hook_. When we attempt to commit our work, the script defined in the `pre-commit` file will run. If any of our tests fail than the commit will be aborted.
-
-The [Husky documentation](https://typicode.github.io/husky/#/) explains how to configure Husky for your own project as well as creating your own custom hooks.\_
