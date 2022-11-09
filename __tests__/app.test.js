@@ -98,15 +98,15 @@ describe('app', () => {
                         expect(reviews).toBeSortedBy('created_at', { descending: true })
                     })
                 })
-                test('status 200: allows reviews to be sorted by category', () => {
+                test('status 200: allows reviews to be viewed by selected category', () => {
                     return request(app)
-                    .get("/api/reviews?category=social deduction")
+                    .get("/api/reviews?category=dexterity")
                     .expect(200)
                     .then(({ body }) => {
                         const { reviews } = body;
-                        expect(reviews).toHaveLength(11);
+                        expect(reviews).toHaveLength(1);
                         reviews.forEach(review => {
-                            expect(review.category).toBe('social deduction')
+                            expect(review.category).toBe('dexterity')
                         })
                     })
                 })
@@ -150,14 +150,14 @@ describe('app', () => {
                 })
                 test('status 200: responds with selected reviews when given all 3 search order queries', () => {
                     return request(app)
-                    .get('/api/reviews?order=asc&category=social deduction&sort_by=review_id')
+                    .get('/api/reviews?order=asc&category=dexterity&sort_by=review_id')
                     .expect(200)
                     .then(({ body }) => {
                         const { reviews } = body;
-                        expect(reviews).toHaveLength(11);
+                        expect(reviews).toHaveLength(1);
                         expect(reviews).toBeSortedBy('review_id');
                         reviews.forEach(review => {
-                            expect(review.category).toBe('social deduction')
+                            expect(review.category).toBe('dexterity')
                         })
                     })
                 })
