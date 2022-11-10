@@ -6,7 +6,7 @@
 
 The aim of this project was to build an api with accessible data stored within a postgreSQL database. 
 
-The server can be used to access/ read <mark>reviews</mark>, <mark>categories</mark>, <mark>users</mark> and <mark>comments</mark>. It also has functionality to <mark>post</mark> new comments, <mark>update</mark> votes on reviews and <mark>delete</mark> comments.
+The server can be used to access/ read `reviews`, `categories`, `users` and `comments`. It also has functionality to `post` new comments, `update` votes on reviews and `delete` comments.
 
 This api has been built using Test Driven Development using the Jest testing framework. Other practices that have been used include pull requests and implementing new features on new branches.
 
