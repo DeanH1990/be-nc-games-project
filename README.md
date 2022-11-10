@@ -24,6 +24,10 @@ In order to clone the repo you will need to fork it to youyr github. You can the
 
     git clone <forked repo url link>
 
+Make sure to change into this directory with:
+
+    cd be-nc-news-project
+
 #### Installing dependencies
 
 The following dependencies have been used to build this project:
@@ -59,3 +63,26 @@ This will create the main development database.
 
 These files will both need to be added to a .gitignore file in order to prevent them being committed to github.
 To ignore both you can add .env.* in the .gitignore file. This will ignore all .env files.
+
+#### Setting up and seeding the database
+
+1. To set up the databases, use the following command:
+
+    npm run setup-dbs
+
+2. To seed the databases, use the following command:
+
+    npm run seed
+
+#### Running the tests
+
+To check all associated endpoint tests are passing, use the following command:
+
+    npm test __tests__/app.test.js
+
+#### Requirements 
+
+You will need the following minimum versions to run the project:
+
+- Node v18.4.0
+- PostgreSQL v14.4
