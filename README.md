@@ -14,7 +14,7 @@ This api has been built using Test Driven Development using the Jest testing fra
 
 The hosted version of this repo can be found here:
 
-(https://dh-nc-games.herokuapp.com/api/)
+(https://dean-hasley-nc-games.cyclic.app/api)
 
 ### How to use this repo
 
